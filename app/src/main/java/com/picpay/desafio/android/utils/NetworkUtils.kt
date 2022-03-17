@@ -6,7 +6,7 @@ import android.net.NetworkCapabilities
 import android.os.Build
 
 class NetworkUtils(private val context: Context) {
-
+    //Verifica se usuário tem acesso a internet
     fun hasInternet(): Boolean {
         val connMgr =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -16,6 +16,7 @@ class NetworkUtils(private val context: Context) {
                     capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
                     capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
         } else {
+            //Usei o "@Suppress("DEPRECATION")", porque sem ele não tem como fazer a verificação em versões que são inferiores ao "Q"
             @Suppress("DEPRECATION")
             connMgr.activeNetworkInfo?.isConnected == true
         }

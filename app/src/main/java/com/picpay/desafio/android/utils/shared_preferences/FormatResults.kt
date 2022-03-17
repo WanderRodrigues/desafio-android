@@ -4,7 +4,8 @@ import com.picpay.desafio.android.data.model.User
 import org.json.JSONArray
 import org.json.JSONObject
 
-class FormatResult {
+class FormatResults() {
+    //Formantando dados recebidos do sharedPreferences
     fun formatResultUsers(arrayUser: JSONArray): List<User>{
         val users: MutableList<User> = ArrayList()
         var obj: JSONObject

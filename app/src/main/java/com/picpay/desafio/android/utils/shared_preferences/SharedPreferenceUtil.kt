@@ -2,6 +2,8 @@ package com.picpay.desafio.android.utils.shared_preferences
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
+import com.google.gson.JsonArray
 import org.json.JSONArray
 
 
@@ -13,13 +15,26 @@ open class SharedPreferenceUtil(private val context: Context) {
     )
 
     fun putString(key: String, users: JSONArray) {
-        val editor = getSP().edit()
-        editor.putString(key, users.toString())
-        editor.apply()
+        try {
+            val editor = getSP().edit()
+            editor.putString(
+                key,
+                users.toString()
+            ).apply()
+        }catch (ex: Exception){
+            Log.e("Excepition Put User", ex.message)
+        }
     }
 
-    fun getListUsers(key: String): JSONArray {
-        return JSONArray(getSP().getString(key, ""))
+    fun getListUsers(key: String): JSONArray{
+        var listUser = JSONArray()
+        try {
+            listUser = JSONArray(getSP().getString(key, ""))
+        }catch (ex: Exception){
+            Log.e("Exception List User", ex.message)
+        }
+
+        return listUser
     }
 
     companion object {

@@ -9,7 +9,7 @@ import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 
 class PicassoUtils {
-
+    //Configuração do picasso, para carregamento das imagens
     fun loadImage(img: String, imageView: ImageView, progress: ProgressBar){
         Picasso.get()
             .load(img)

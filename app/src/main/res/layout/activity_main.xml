@@ -41,13 +41,26 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="48dp"
                 android:text="@string/title"
+                android:visibility="@{viewModel.status == Status.SUCCESS ? View.VISIBLE : View.GONE, default=gone}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraint"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/textView"
+                    style="@style/ScreenTitleTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/load_error"
+                    android:textAlignment="center"
+                    app:layout_constraintBottom_toBottomOf="@+id/recyclerUsers"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:visibility="@{viewModel.status == Status.ERROR ? View.VISIBLE : View.GONE, default=gone}"
+                    app:layout_constraintTop_toTopOf="@+id/recyclerUsers" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerUsers"
@@ -67,7 +80,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="@{viewModel.status == Status.LOADING ? View.VISIBLE : View.GONE, default=gone }"
-                    app:layout_constraintBottom_toBottomOf="@+id/constraint"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

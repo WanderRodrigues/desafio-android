@@ -9,13 +9,12 @@ import com.picpay.desafio.android.data.model.User
 import com.picpay.desafio.android.domain.GetUsersUseCase
 import com.picpay.desafio.android.extensions.read
 import com.picpay.desafio.android.utils.Status
-import com.picpay.desafio.android.utils.shared_preferences.FormatResult
+import com.picpay.desafio.android.utils.shared_preferences.FormatInserts
+import com.picpay.desafio.android.utils.shared_preferences.FormatResults
 import com.picpay.desafio.android.utils.shared_preferences.SharedPreferenceUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.json.JSONArray
-import org.json.JSONObject
 
 class MainViewModel(
     private val getUsersUseCase: GetUsersUseCase,
@@ -33,7 +32,10 @@ class MainViewModel(
     fun setList(users: List<User>){
         _usersList.value = users
     }
+
+    //Verificando se tem internet
     fun checkNetwork(){
+        //Se tiver carrega os dados através da api, se não pega do cache
         if (hasNetwork.value!!){
             loadUsersByApi()
         }else{
@@ -50,7 +52,7 @@ class MainViewModel(
                 it.read({ users->
                     _status.value = Status.SUCCESS
                     _usersList.value = users
-                    setUsers()
+                    setUsersShared()
 
                 }, {
                     _usersList.value = listOf()
@@ -60,31 +62,28 @@ class MainViewModel(
             }
     }
 
-    private fun setUsers(){
-        val array = JSONArray()
-        var obj: JSONObject
-
-        userList.value?.forEach {
-            obj = JSONObject()
-            obj.put("id", it.id)
-            obj.put("name", it.name)
-            obj.put("img", it.img)
-            obj.put("username", it.username)
-
-            array.put(obj)
-        }
+    private fun setUsersShared() = viewModelScope.launch {
 
         sharedPreferenceUtil.putString(
             SharedPreferenceUtil.USERS,
-            array
+            FormatInserts().setUserSP(userList.value)
         )
     }
 
+    //Recuperando lista de user do sharedPreferences
     private fun getUsersShared() : List<User>? {
-       val listUsers = FormatResult().formatResultUsers( sharedPreferenceUtil.getListUsers(
-            SharedPreferenceUtil.USERS))
+        _status.value = Status.LOADING
+        val listUsers = FormatResults().formatResultUsers(
+            sharedPreferenceUtil.getListUsers(
+                SharedPreferenceUtil.USERS
+            )
+        )
+        if (listUsers.isNotEmpty()) {
+            _status.value = Status.SUCCESS
+        }else{
+            _status.value = Status.ERROR
+        }
         return listUsers
-
     }
 
 }
