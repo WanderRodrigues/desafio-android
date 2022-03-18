@@ -19,6 +19,17 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
+    testOptions {
+        unitTests {
+            returnDefaultValues = true
+            includeAndroidResources = true
+        }
+        animationsDisabled = true
+    }
+    dataBinding {
+        enabled = true
+    }
     buildTypes {
         debug {}
 
@@ -54,6 +65,7 @@ dependencies {
     implementation "org.koin:koin-core:$koin_version"
     implementation "org.koin:koin-android:$koin_version"
     implementation "org.koin:koin-androidx-viewmodel:$koin_version"
+    implementation "org.koin:koin-android-scope:$koin_version"
 
     implementation "com.google.dagger:dagger:$dagger_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
@@ -82,11 +94,22 @@ dependencies {
 
     testImplementation "junit:junit:$junit_version"
     testImplementation "org.mockito:mockito-core:$mockito_version"
-    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockito_kotlin_version"
     testImplementation "androidx.arch.core:core-testing:$core_testing_version"
     implementation "org.koin:koin-test:$koin_version"
 
-    androidTestImplementation "androidx.test:runner:$test_runner_version"
+
+    // Espresso dependencies
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
-    androidTestImplementation "androidx.test:core-ktx:$core_ktx_test_version"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espress_contrib"
+    androidTestImplementation "androidx.test.espresso:espresso-intents:$espress_intents"
+
+    // Core library
+    androidTestImplementation "androidx.test:core:$core_ktx_test_version"
+    // AndroidJUnitRunner and JUnit Rules
+    androidTestImplementation "androidx.test:runner:$test_runner_version"
+    androidTestImplementation "androidx.test:rules:$test_rules"
+
+    testImplementation "io.mockk:mockk:$mockk_version"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$mockk_version"
+
 }
